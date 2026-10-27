@@ -5,7 +5,7 @@ This repository contains the replication data and code for the article:
 > **Energy Market Resilience to Uncertainty Shocks: An Absorption and Recovery Perspective**  
 > **Authors:** Jingjie Wang, Shoukun Jiao (Corresponding Author), Jinting Yang, and Wuyi Ye  
 > **Journal:** *Energy Economics*  
-> **Manuscript Number:** ENEECO-D-26-01823  
+
 
 ---
 
@@ -106,8 +106,4 @@ Please keep both `Energy Economics Code` and `Energy Economics Data` folders und
 
 ## 5. Contact
 
-For replication questions, code details, or data clarifications, please contact:
-
-- **Dr. Shoukun Jiao** (Corresponding Author)  
-  School of Public Policy & Management, University of Science and Technology of China  
-  Email: `jsk@ustc.edu.cn`
+All data and replication code are publicly available in this repository. For further inquiries, please contact the corresponding author.
