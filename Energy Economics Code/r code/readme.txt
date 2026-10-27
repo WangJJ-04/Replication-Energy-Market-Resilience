@@ -1,0 +1,198 @@
+ENERGY ECONOMICS R CODE
+======================
+
+1. SCRIPTS
+----------
+ee_descriptive_statistics.r produces the variable-summary LaTeX table and the
+resilience summaries, correlations, and monthly ranking counts.
+ee_plot_for_resilience.r contains four complete plotting blocks.
+
+The refactor reuses console headings, paired RI/RD panel calls, and column
+headers; the duplicate schematic helpers share one implementation. Both
+schematic helper names remain available. Repeated separator comments and
+excessive line wrapping have been removed. Inputs, paths, settings, formulas,
+validation messages, console output order, and output filenames are retained.
+Each plotting block keeps its own setup and can still be run separately.
+
+2. SOFTWARE
+-----------
+Descriptive statistics: readxl, tseries, e1071.
+Plots: ggplot2, grid, readxl, sysfonts, showtext.
+grid is included with R. Install the other packages once if needed:
+
+  install.packages(c("readxl", "tseries", "e1071", "ggplot2", "sysfonts", "showtext"))
+
+The font settings use these macOS files:
+  /System/Library/Fonts/Supplemental/Times New Roman.ttf
+  /System/Library/Fonts/Supplemental/Times New Roman Bold.ttf
+  /System/Library/Fonts/Supplemental/Times New Roman Italic.ttf
+  /System/Library/Fonts/Supplemental/Times New Roman Bold Italic.ttf
+
+Block 1 requires all four fonts and stops if any are absent. Blocks 2-4 use
+Times New Roman when available and otherwise use a sans-serif fallback.
+Configure the font paths within each block for another computer.
+
+3. PROJECT ROOT AND RUNNING ORDER
+--------------------------------
+Keep Energy Economics Code and Energy Economics Data under the same parent.
+Set PROJECT_DIR to that parent; both scripts respect a value already supplied
+in the R session. The unchanged default is ~/Desktop/nature skill/my paper.
+
+The variable-summary block can run before MATLAB estimation. The resilience
+summaries and baseline plots require matlab code/resilience_metrics.xlsx.
+The Markov plot additionally requires the exports from python code/Markov.ipynb.
+
+To run the full descriptive script, start from the parent of the two folders:
+
+  PROJECT_DIR <- normalizePath(getwd())
+  source(file.path(PROJECT_DIR, "Energy Economics Code", "r code",
+                   "ee_descriptive_statistics.r"))
+
+For baseline and horizon-comparison plots, first create the existing date object
+from the full 167-month workbook:
+
+  date_source <- readxl::read_xlsx(file.path(
+    PROJECT_DIR, "Energy Economics Data", "VAR_100data.xlsx"))
+  index_GPR_m1_data <- data.frame(Date = as.Date(date_source$date))
+
+The plots use index_GPR_m1_data$Date[2:167], February 2010-November 2023.
+An existing object with that date sequence can also be used. Preserve the
+chronological order and the 166 observations in every plotted market series.
+
+Run the Required packages section before selecting a complete plotting block
+in RStudio. Sourcing the whole plotting file executes all four blocks and
+requires every input, including the separate horizon-comparison workbooks.
+The helper functions are defined inside their respective blocks; no extra
+helper file or new initialization step is required.
+
+4. DESCRIPTIVE STATISTICS
+-------------------------
+Part A reads:
+  Energy Economics Data/VAR_100data.xlsx
+  Energy Economics Data/markov_100data_167.csv
+
+Both cover January 2010-November 2023 (167 observations). The workbook supplies
+percentage energy returns and uncertainty-index levels. The CSV supplies four
+transformed, unstandardized macrofinancial series. The files are joined by date
+while preserving workbook order. No extra scaling or standardization is applied.
+The VAR reader also retains its CSV-input branch. VAR_data.csv is the reference
+copy with decimal energy returns, one hundredth of the workbook's energy values.
+
+The three table panels are:
+  Energy markets: OIL, NG, COAL, ERIX, EUA.
+  Uncertainty indicators: GPR, CPU, OPU.
+  Macrofinancial conditioning variables: GSCPI, DXY, CPI, Industrial.
+
+Mean, median, minimum, maximum, and sample SD use their usual definitions.
+Skewness and excess kurtosis use e1071 type = 3 (normal excess kurtosis = 0).
+ADF uses tseries::adf.test(x, alternative = "stationary") and its default lag
+rule. A reported lower-bound p-value of 0.01 receives three stars; larger
+p-values retain the existing 5% and 10% significance rules.
+
+The table is printed and saved to:
+  Energy Economics Code/r code/variable_summary_statistics.tex
+It requires the LaTeX packages float, booktabs, and threeparttable. Unrounded
+results remain in variable_descriptive_statistics. The existing two-decimal
+table formatting, ADF stars, caption, label, and notes are retained.
+
+Part B reads:
+  Energy Economics Code/matlab code/resilience_metrics.xlsx
+
+Expected columns: t, Variable, RP, RD. RP is resilience intensity (RI); RD is
+resilience duration. The baseline contains 166 observations per series, from
+February 2010 to November 2023. The R script reads these measures directly.
+It retains the RI/RD matrices, Pearson correlations with pairwise complete
+observations, Mean/SD/Min/Max tables, individual ranking tables, and wide ranking
+tables. RI ranks higher values first; RD ranks lower values first. Ranking
+excludes incomplete months and selects the first market in a tie, with the
+existing warnings. Console rounding and printing order are unchanged.
+
+RUN_IMPULSE_DIAGNOSTIC remains FALSE. TRUE enables the original single-path
+preview using matlab code/tvpvar_imp.xlsx; it does not supply the summaries.
+
+The separate Python conditioning input is:
+  Energy Economics Data/markov_scale_data_166.csv
+It uses rows 2:167 of the 167-row macrofinancial file, standardized using the
+166-period sample and sample SD (denominator n-1). It is not the R summary input.
+
+5. PLOTTING BLOCKS AND OUTPUTS
+------------------------------
+Block 1. Three-panel resilience schematic (6.2 x 12.2 inches).
+  Output: r_plot_resilience_abc_vertical_re.pdf
+  Folder: the current R working directory.
+
+Block 2. GPR/CPU/OPU baseline figures (each 12 x 16 inches, 6 x 2 layout).
+  Input: <PROJECT_DIR>/Energy Economics Code/matlab code/resilience_metrics.xlsx
+  Outputs:
+    gpr_resilience_6x2_academic_fine_labels.pdf
+    cpu_resilience_6x2_academic_fine_labels.pdf
+    opu_resilience_6x2_academic_fine_labels.pdf
+  Folder: <PROJECT_DIR>/Energy Economics Code/r code/output/figures/
+  Rows 1-5 contain the five markets; row 6 contains event labels.
+
+Block 3. Horizon comparison (12 x 16 inches, five market rows plus legend).
+  Inputs: resilience_metrics_median6.xlsx, resilience_metrics_median.xlsx,
+          resilience_metrics_median10.xlsx (H = 6, 8, and 10).
+  Output: gpr_resilience_H_comparison_academic_no_shades.pdf
+  Folder: ~/Desktop/nature skill/my paper/New_Fig
+  This block retains the original external read_xlsx() paths, with R Unicode
+  escapes. Configure these paths and target_dir for another computer. The
+  workbooks are separate from the packaged baseline. There are no event shades
+  or labels. The mapping stays GPR (Var6-Var10); TARGET_SHOCK names the PDF only.
+
+Block 4. Markov probabilities and resilience (12 x 16 inches, 5 x 2 plus legend).
+  Input folder: <PROJECT_DIR>/Energy Economics Code/python code/output/
+  Input: <shock>_ms_state_probabilities_state<state>.xlsx
+  Default output: opu_ms_smoothed_probability_5x2_state1_prob_left_metric_right.pdf
+  Output folder: figures/ within the Python output folder.
+  Required sheets: probabilities_long and state_mapping.
+  Plotting columns: date, market, measure, metric_value, prob_selected.
+  Measures are RI/RD; markets are OIL, NG, COAL, ERIX, EUA. The left axis shows
+  probability and the right axis shows the resilience metric.
+
+The default Markov settings remain SHOCK_LABEL = "OPU" and STATE_TO_PLOT = 1.
+Set both consistently with the Python export filename. For state 2, also update
+the retained "State 1 Strong Resilience" legend wording as appropriate.
+Running a block again replaces its PDFs at the same configured paths.
+
+6. BASELINE FIGURE CONTROLS
+---------------------------
+TARGET_SHOCKS <- c("GPR", "CPU", "OPU") preserves the three output files and
+that order. Select a subset to draw fewer figures. The existing interface is:
+
+  plot_vertical_resilience(
+    target_shock = "GPR", r_data = r_data, x_date = x_date,
+    target_dir = RESILIENCE_OUTPUT_DIR)
+
+It returns the path invisibly. vertical_output_files retains the named paths.
+MARKET_VAR_MAPS stores the original mappings, in OIL/NG/COAL/ERIX/EUA order:
+  GPR: Var6,  Var7,  Var8,  Var9,  Var10
+  CPU: Var14, Var15, Var16, Var17, Var18
+  OPU: Var22, Var23, Var24, Var25, Var26
+
+EVENT_LABEL_ADJUSTMENTS retains event_id, measure, x_shift_months, and y_pos.
+"both" changes RI and RD together; "RI"/"RD" changes one column. Negative
+x_shift_months moves a label left; positive values move it right. Larger y_pos
+moves it upward. Rows apply in order, with later rows overriding earlier ones.
+Append an override before the generation loop, for example:
+
+  EVENT_LABEL_ADJUSTMENTS$GPR <- rbind(
+    EVENT_LABEL_ADJUSTMENTS$GPR,
+    data.frame(event_id = "E22", measure = "RD", x_shift_months = -2.2,
+               y_pos = 0.12, stringsAsFactors = FALSE))
+
+set_event_label_pos() within the generator also retains srt, cex, adj_x, adj_y,
+col_text, and label controls. Further manual calls belong after the adjustment
+loop and before plotting. OPU still excludes E16 by classifying it as CPU and
+uses "OPEC+ cuts" for E20. Event windows, labels, offsets, market order, colors,
+line widths, fonts, axes, margins, shading, and PDF dimensions retain their
+existing values. Each shock uses common RI and RD axis ranges across markets.
+
+7. STATIC VERIFICATION OF THE REFACTOR
+-------------------------------------
+Both scripts passed R syntax parsing. After statically expanding the extracted
+helper calls and resolving the duplicate-helper alias, their executable syntax
+trees exactly match the pre-refactor versions. This comparison covers the
+calculation expressions, I/O calls, constants, plotting calls, and their order.
+Neither script was sourced. No analysis data, statistical results, LaTeX tables,
+or PDFs were regenerated for this refactor.

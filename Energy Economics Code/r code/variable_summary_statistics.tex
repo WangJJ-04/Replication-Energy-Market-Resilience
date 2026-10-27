@@ -1,0 +1,37 @@
+\begin{table}[H]
+\centering
+\caption{Summary statistics.}
+\label{tab:descriptive_statistics}
+\begin{threeparttable}
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Variable & $n$ & Mean & SD & Median & Min & Max & Skewness & Kurtosis & ADF \\
+\midrule
+\multicolumn{10}{l}{\textit{Panel A: Energy markets}} \\[2pt]
+OIL & 167 & $\phantom{-}0.02$ & $\phantom{-}9.90$ & $\phantom{-}0.87$ & $-63.39$ & $\phantom{-}35.70$ & $-1.47$ & $\phantom{-}9.51$ & $-5.08^{***}$ \\
+NG & 167 & $-0.41$ & $\phantom{-}14.15$ & $\phantom{-}0.34$ & $-51.12$ & $\phantom{-}41.68$ & $-0.42$ & $\phantom{-}1.94$ & $-5.24^{***}$ \\
+COAL & 167 & $\phantom{-}0.23$ & $\phantom{-}10.72$ & $\phantom{-}0.29$ & $-47.33$ & $\phantom{-}40.82$ & $-0.59$ & $\phantom{-}4.46$ & $-4.49^{***}$ \\
+ERIX & 167 & $\phantom{-}0.37$ & $\phantom{-}7.36$ & $\phantom{-}0.15$ & $-20.69$ & $\phantom{-}20.48$ & $\phantom{-}0.02$ & $\phantom{-}0.07$ & $-4.14^{***}$ \\
+EUA & 167 & $\phantom{-}1.03$ & $\phantom{-}14.16$ & $\phantom{-}1.35$ & $-66.80$ & $\phantom{-}36.08$ & $-0.98$ & $\phantom{-}3.20$ & $-4.10^{***}$ \\
+\midrule
+\multicolumn{10}{l}{\textit{Panel B: Uncertainty indicators}} \\[2pt]
+GPR & 167 & $\phantom{-}98.25$ & $\phantom{-}30.07$ & $\phantom{-}91.02$ & $\phantom{-}58.42$ & $\phantom{-}318.95$ & $\phantom{-}3.23$ & $\phantom{-}17.63$ & $-3.81^{**}$ \\
+CPU & 167 & $\phantom{-}148.52$ & $\phantom{-}70.23$ & $\phantom{-}130.13$ & $\phantom{-}38.09$ & $\phantom{-}411.29$ & $\phantom{-}0.86$ & $\phantom{-}0.41$ & $-3.98^{**}$ \\
+OPU & 167 & $\phantom{-}108.61$ & $\phantom{-}61.90$ & $\phantom{-}94.40$ & $\phantom{-}18.70$ & $\phantom{-}364.23$ & $\phantom{-}1.43$ & $\phantom{-}2.59$ & $-3.89^{**}$ \\
+\midrule
+\multicolumn{10}{l}{\textit{Panel C: Macrofinancial conditioning variables}} \\[2pt]
+GSCPI & 167 & $\phantom{-}0.47$ & $\phantom{-}41.11$ & $\phantom{-}4.19$ & $-147.93$ & $\phantom{-}135.57$ & $-0.22$ & $\phantom{-}1.56$ & $-5.93^{***}$ \\
+DXY & 167 & $\phantom{-}0.17$ & $\phantom{-}2.10$ & $\phantom{-}0.26$ & $-5.54$ & $\phantom{-}5.80$ & $\phantom{-}0.03$ & $\phantom{-}0.22$ & $-4.64^{***}$ \\
+CPI & 167 & $\phantom{-}0.25$ & $\phantom{-}0.29$ & $\phantom{-}0.21$ & $-0.41$ & $\phantom{-}1.49$ & $\phantom{-}1.00$ & $\phantom{-}2.05$ & $-3.26^{*}$ \\
+Industrial & 167 & $\phantom{-}0.10$ & $\phantom{-}1.62$ & $\phantom{-}0.15$ & $-16.18$ & $\phantom{-}7.77$ & $-5.55$ & $\phantom{-}62.11$ & $-6.54^{***}$ \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item \textit{Notes:} $n$ denotes the number of monthly observations. SD is the sample standard deviation. Skewness and excess kurtosis use the type-3 definitions in the e1071 package. ADF is the Augmented Dickey--Fuller test statistic for the null hypothesis of a unit root, computed using tseries::adf.test with its default lag rule. $^{***}$, $^{**}$, and $^{*}$ denote rejection at the 1\%, 5\%, and 10\% significance levels. The tseries lower-bound p-value of 0.01 is shown with three stars.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
