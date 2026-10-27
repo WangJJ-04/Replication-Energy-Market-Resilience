@@ -17,9 +17,12 @@ Keep these two folders together under the same parent directory:
       VAR_data.csv
       markov_100data_167.csv
       markov_scale_data_166.csv
+      horizon_resilience/
+    Fig/                         (all MATLAB and R PDF figures)
 
 Energy Economics Data contains the prepared monthly estimation inputs.
-Energy Economics Code contains the programs and their generated outputs.
+Energy Economics Code contains the programs and generated analysis workbooks.
+All PDF figures are saved together in <project root>/Fig/, created as needed.
 The parent directory can have any name; retain the two package folder names.
 
 Detailed instructions and parameter definitions are provided in:
@@ -78,7 +81,7 @@ are standardized within MATLAB. With fastimp = 0, GIRFs are summarized by
 their pointwise posterior medians across retained draws.
 
 This stage exports tvpvar_imp.xlsx, parameter/volatility workbooks, and five
-diagnostic/parameter PDF groups in tvpvar_pdf_figures/. The MATLAB README
+diagnostic/parameter PDF groups in <project root>/Fig/. The MATLAB README
 explains the priors, preliminary iterations, memory use, and all settings.
 
 tvpvar_main.m ends after MCMC estimation and export. Run resilience.m separately
@@ -165,14 +168,14 @@ Open r code/ee_plot_for_resilience.r and run the required complete blocks:
   Block 3: optional comparison of H = 6, 8, and 10.
   Block 4: Markov probability/metric figures from the Python exports.
 
-The baseline figures are written to r code/output/figures/. The Markov block
-reads python code/output/ and writes its figures to output/figures/ within
-that Python directory. Its SHOCK_LABEL and STATE_TO_PLOT choose the workbook.
+All four R plotting blocks write their PDFs to <project root>/Fig/, together
+with the MATLAB diagnostic figures. The Markov block still reads its input
+workbooks from python code/output/; SHOCK_LABEL and STATE_TO_PLOT select them.
 
-The alternative-horizon block requires separately generated H = 6 and H = 10
-resilience workbooks. These are additional inputs to the optional comparison;
-the supplied MATLAB resilience workbook is the H = 8 baseline. Run selected
-blocks as documented in the R README when those additional files are absent.
+Block 3 reads the three supplied H = 6, 8, and 10 workbooks from
+Energy Economics Data/horizon_resilience/. These archived comparison inputs
+preserve the existing figure data. See the Data and MATLAB READMEs for their
+layout and the settings needed to regenerate alternative horizons.
 
 8. INPUT UNITS AND REPRODUCTION NOTES
 -------------------------------------

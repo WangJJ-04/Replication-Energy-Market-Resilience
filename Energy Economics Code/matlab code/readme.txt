@@ -13,8 +13,9 @@ The workflow has two stages:
   resilience.m: tvpvar_imp.xlsx -> resilience_metrics.xlsx
 
 Keep all supplied .m files together and set MATLAB's Current Folder to this
-matlab code directory. The exported workbooks and PDF directory are written
-relative to the Current Folder.
+matlab code directory. Exported workbooks are written in the Current Folder.
+All PDF figures are written to <project root>/Fig/, resolved from this
+function's location and created automatically when needed.
 
 Step 1. Keep Energy Economics Code and Energy Economics Data as sibling folders.
         Open tvpvar_main.m from this matlab code folder. It resolves the input
@@ -158,7 +159,7 @@ The main outputs in the Current Folder are:
   tvpvar_ai.xlsx    Posterior means and SDs of inverse-matrix elements.
   tvpvar_int.xlsx   Posterior means and SDs of the time-varying intercepts.
 
-Five diagnostic/parameter PDF groups are exported to tvpvar_pdf_figures/:
+Five diagnostic/parameter PDF groups are exported to <project root>/Fig/:
 
   01_parameter_diagnostics.pdf
   02_stochastic_volatility.pdf
@@ -299,3 +300,27 @@ encoding to an English UTF-8-compatible ASCII file. Estimation parameters,
 random-number calls, numerical formulas, export filenames, and output column
 identifiers are unchanged. tvpvar_main.m ends after MCMC estimation and export;
 resilience.m is run separately to construct the resilience metrics.
+
+9. ALTERNATIVE HORIZONS FOR THE COMPARISON FIGURE
+-----------------------------------------------
+The existing comparison inputs are supplied in:
+  Energy Economics Data/horizon_resilience/
+They can be plotted directly by R Block 3 without regenerating MCMC results.
+
+To generate another horizon, keep the driver impulse setting, resilience.m's
+N, and its first retained worksheet row consistent. For the supplied one-lag
+specification, there are three header rows and N undefined response rows for
+t = 1, so the first valid row is 3 + N + 1:
+
+  H   N = H + 1   First retained row   Comparison workbook
+  6       7              11          resilience_metrics_median6.xlsx
+  8       9              13          resilience_metrics_median.xlsx
+  10     11              15          resilience_metrics_median10.xlsx
+
+Set setvar_girf('impulse', H) in tvpvar_main.m, then update N and
+data(first_row:end,:) in resilience.m before running those two stages.
+Retain each generated workbook separately under the listed comparison name.
+Use a separate working copy when generating alternatives so the main H = 8
+analysis workbooks remain available for the baseline Markov and R workflows.
+The files packaged for the comparison were copied from the existing analysis;
+this path update did not re-estimate them.

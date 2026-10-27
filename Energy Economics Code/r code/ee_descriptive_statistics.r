@@ -12,7 +12,7 @@ library(readxl)
 
   # Both input files contain 167 months, from January 2010 to November 2023.
   if (!exists("PROJECT_DIR", inherits = TRUE)) {
-    PROJECT_DIR <- path.expand("~/Desktop/nature skill/my paper")
+    PROJECT_DIR <- normalizePath(getwd(), mustWork = TRUE)
   }
   VAR_DATA_FILE <- file.path(PROJECT_DIR, "Energy Economics Data", "VAR_100data.xlsx")
   MACRO_DATA_FILE <- file.path(PROJECT_DIR, "Energy Economics Data", "markov_100data_167.csv")

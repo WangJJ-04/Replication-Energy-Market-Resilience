@@ -10,8 +10,10 @@ ee_plot_for_resilience.r contains four complete plotting blocks.
 The refactor reuses console headings, paired RI/RD panel calls, and column
 headers; the duplicate schematic helpers share one implementation. Both
 schematic helper names remain available. Repeated separator comments and
-excessive line wrapping have been removed. Inputs, paths, settings, formulas,
-validation messages, console output order, and output filenames are retained.
+excessive line wrapping have been removed. Settings, formulas, validation
+messages, console output order, and output filenames are retained. All PDF
+figures now use <project root>/Fig/. The horizon-comparison inputs are bundled
+in Energy Economics Data/horizon_resilience/ rather than a personal directory.
 Each plotting block keeps its own setup and can still be run separately.
 
 2. SOFTWARE
@@ -36,7 +38,8 @@ Configure the font paths within each block for another computer.
 --------------------------------
 Keep Energy Economics Code and Energy Economics Data under the same parent.
 Set PROJECT_DIR to that parent; both scripts respect a value already supplied
-in the R session. The unchanged default is ~/Desktop/nature skill/my paper.
+in the R session. If not supplied, PROJECT_DIR uses the current R working
+directory. Start R at the project root, or set PROJECT_DIR explicitly.
 
 The variable-summary block can run before MATLAB estimation. The resilience
 summaries and baseline plots require matlab code/resilience_metrics.xlsx.
@@ -61,7 +64,7 @@ chronological order and the 166 observations in every plotted market series.
 
 Run the Required packages section before selecting a complete plotting block
 in RStudio. Sourcing the whole plotting file executes all four blocks and
-requires every input, including the separate horizon-comparison workbooks.
+requires every input, including the bundled horizon-comparison workbooks.
 The helper functions are defined inside their respective blocks; no extra
 helper file or new initialization step is required.
 
@@ -119,7 +122,7 @@ It uses rows 2:167 of the 167-row macrofinancial file, standardized using the
 ------------------------------
 Block 1. Three-panel resilience schematic (6.2 x 12.2 inches).
   Output: r_plot_resilience_abc_vertical_re.pdf
-  Folder: the current R working directory.
+  Folder: <PROJECT_DIR>/Fig/.
 
 Block 2. GPR/CPU/OPU baseline figures (each 12 x 16 inches, 6 x 2 layout).
   Input: <PROJECT_DIR>/Energy Economics Code/matlab code/resilience_metrics.xlsx
@@ -127,24 +130,24 @@ Block 2. GPR/CPU/OPU baseline figures (each 12 x 16 inches, 6 x 2 layout).
     gpr_resilience_6x2_academic_fine_labels.pdf
     cpu_resilience_6x2_academic_fine_labels.pdf
     opu_resilience_6x2_academic_fine_labels.pdf
-  Folder: <PROJECT_DIR>/Energy Economics Code/r code/output/figures/
+  Folder: <PROJECT_DIR>/Fig/.
   Rows 1-5 contain the five markets; row 6 contains event labels.
 
 Block 3. Horizon comparison (12 x 16 inches, five market rows plus legend).
   Inputs: resilience_metrics_median6.xlsx, resilience_metrics_median.xlsx,
           resilience_metrics_median10.xlsx (H = 6, 8, and 10).
+  Input folder: <PROJECT_DIR>/Energy Economics Data/horizon_resilience/
   Output: gpr_resilience_H_comparison_academic_no_shades.pdf
-  Folder: ~/Desktop/nature skill/my paper/New_Fig
-  This block retains the original external read_xlsx() paths, with R Unicode
-  escapes. Configure these paths and target_dir for another computer. The
-  workbooks are separate from the packaged baseline. There are no event shades
+  Folder: <PROJECT_DIR>/Fig/.
+  The archived workbooks preserve the original comparison inputs and are
+  separate from the main MATLAB baseline workbook. There are no event shades
   or labels. The mapping stays GPR (Var6-Var10); TARGET_SHOCK names the PDF only.
 
 Block 4. Markov probabilities and resilience (12 x 16 inches, 5 x 2 plus legend).
   Input folder: <PROJECT_DIR>/Energy Economics Code/python code/output/
   Input: <shock>_ms_state_probabilities_state<state>.xlsx
   Default output: opu_ms_smoothed_probability_5x2_state1_prob_left_metric_right.pdf
-  Output folder: figures/ within the Python output folder.
+  Output folder: <PROJECT_DIR>/Fig/.
   Required sheets: probabilities_long and state_mapping.
   Plotting columns: date, market, measure, metric_value, prob_selected.
   Measures are RI/RD; markets are OIL, NG, COAL, ERIX, EUA. The left axis shows
@@ -188,11 +191,13 @@ uses "OPEC+ cuts" for E20. Event windows, labels, offsets, market order, colors,
 line widths, fonts, axes, margins, shading, and PDF dimensions retain their
 existing values. Each shock uses common RI and RD axis ranges across markets.
 
-7. STATIC VERIFICATION OF THE REFACTOR
--------------------------------------
-Both scripts passed R syntax parsing. After statically expanding the extracted
-helper calls and resolving the duplicate-helper alias, their executable syntax
-trees exactly match the pre-refactor versions. This comparison covers the
-calculation expressions, I/O calls, constants, plotting calls, and their order.
-Neither script was sourced. No analysis data, statistical results, LaTeX tables,
-or PDFs were regenerated for this refactor.
+7. STATIC VERIFICATION
+----------------------
+Both scripts passed R syntax parsing. After accounting for the documented
+project/input/output path changes and directory setup, the remaining executable
+syntax trees match the previous versions. Statistical expressions, plotting
+settings, labels, event adjustments, and their order are retained.
+The horizon workbooks were copied byte for byte from the existing analysis.
+Existing reference PDFs were relocated without changing their contents.
+Neither script was sourced; no statistical results, LaTeX tables, or PDFs were
+regenerated for this output-path update.

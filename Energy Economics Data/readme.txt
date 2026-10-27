@@ -7,12 +7,15 @@ This folder contains prepared monthly inputs for the energy-market resilience
 analysis. Keep it beside Energy Economics Code under the same parent directory.
 The Code README provides the full MATLAB -> resilience -> Python -> R workflow.
 
-The folder contains four input files:
+The folder contains four primary monthly input files:
 
   VAR_100data.xlsx
   VAR_data.csv
   markov_100data_167.csv
   markov_scale_data_166.csv
+
+The horizon_resilience/ subfolder additionally contains three archived
+resilience workbooks for the H = 6, 8, and 10 comparison figure (Section 8).
 
 The preferred VAR and variable-summary input is VAR_100data.xlsx. The CSV
 VAR_data.csv retains decimal energy returns as a reference series. It is not
@@ -28,8 +31,8 @@ markov_100data_167.csv        167           Jan 2010-Nov 2023         R macrofin
 markov_scale_data_166.csv     166           Feb 2010-Nov 2023         Python Markov regressors
 
 The workbook contains one worksheet, VAR_100data. The listed observation counts
-exclude the header row. All files have a first column named date. The supplied
-files have no missing cells or duplicate monthly dates.
+exclude the header row. All four primary input files have a first column named
+date. These primary files have no missing cells or duplicate monthly dates.
 
 Dates are stored as month-start ISO 8601 strings, for example:
   2010-01-01T00:00:00Z
@@ -149,3 +152,22 @@ markov_scale_data_166.csv, then exports state probabilities and Wald tests to:
 The R descriptive statistics use the 167-month files before standardization;
 the Markov regressions use the 166-month standardized macrofinancial input.
 This accounts for the different sample lengths and units in the two stages.
+
+8. horizon_resilience/: HORIZON-COMPARISON INPUTS
+-----------------------------------------------
+This subfolder contains the existing analysis workbooks used by R Block 3:
+
+  resilience_metrics_median6.xlsx   H = 6
+  resilience_metrics_median.xlsx    H = 8
+  resilience_metrics_median10.xlsx  H = 10
+
+Each workbook contains t, Variable, RP, and RD, with 166 observations for each
+of the 64 shock-response combinations. The sample indices are t = 2,...,167,
+corresponding to February 2010-November 2023. These are precomputed resilience
+measures, separate from the four monthly VAR/macrofinancial source inputs.
+The original comparison files were copied without changing their contents.
+
+The R plotting script reads this packaged subfolder using PROJECT_DIR; no
+personal Desktop directory is required. Its comparison PDF is saved to the
+common <project root>/Fig/ folder. The MATLAB README, Section 9, describes the
+H/N/worksheet-row settings for generating alternative-horizon workbooks.

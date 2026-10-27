@@ -18,7 +18,8 @@ tic;
 % ========================================================
 % 0) Output directory
 % ========================================================
-outdir = fullfile(pwd, 'tvpvar_pdf_figures');
+project_dir = fileparts(fileparts(fileparts(mfilename('fullpath'))));
+outdir = fullfile(project_dir, 'Fig');
 if ~exist(outdir, 'dir')
     mkdir(outdir);
 end

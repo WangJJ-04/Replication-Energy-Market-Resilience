@@ -33,7 +33,13 @@ library(showtext)
   FONT_FAMILY <- "Times New Roman"
 
   # 2. Output device
-  pdf("r_plot_resilience_abc_vertical_re.pdf", width = 6.2, height = 12.2, useDingbats = FALSE)
+  if (!exists("PROJECT_DIR", inherits = TRUE)) {
+    PROJECT_DIR <- normalizePath(getwd(), mustWork = TRUE)
+  }
+  FIG_DIR <- file.path(PROJECT_DIR, "Fig")
+  dir.create(FIG_DIR, recursive = TRUE, showWarnings = FALSE)
+  pdf(file.path(FIG_DIR, "r_plot_resilience_abc_vertical_re.pdf"),
+    width = 6.2, height = 12.2, useDingbats = FALSE)
 
   showtext_begin()
 
@@ -356,12 +362,11 @@ library(showtext)
   TARGET_SHOCKS <- c("GPR", "CPU", "OPU")
 
   if (!exists("PROJECT_DIR", inherits = TRUE)) {
-    PROJECT_DIR <- path.expand("~/Desktop/nature skill/my paper")
+    PROJECT_DIR <- normalizePath(getwd(), mustWork = TRUE)
   }
   RESILIENCE_FILE <- file.path(
     PROJECT_DIR, "Energy Economics Code", "matlab code", "resilience_metrics.xlsx")
-  RESILIENCE_OUTPUT_DIR <- file.path(
-    PROJECT_DIR, "Energy Economics Code", "r code", "output", "figures")
+  RESILIENCE_OUTPUT_DIR <- file.path(PROJECT_DIR, "Fig")
 
   r_data <- read_xlsx(RESILIENCE_FILE)
   x_date <- as.Date(index_GPR_m1_data$Date[2:167])
@@ -804,13 +809,16 @@ library(showtext)
   # 2) Basic settings
   TARGET_SHOCK <- "GPR" # Used only to name the output file
 
+  if (!exists("PROJECT_DIR", inherits = TRUE)) {
+    PROJECT_DIR <- normalizePath(getwd(), mustWork = TRUE)
+  }
   x_date <- as.Date(index_GPR_m1_data$Date[2:167])
 
   year_ticks <- seq(from = as.Date(paste0(format(min(x_date), "%Y"), "-01-01")),
     to = as.Date(paste0(format(max(x_date), "%Y"), "-01-01")), by = "1 year")
 
   # 3) Output file
-  target_dir <- "~/Desktop/nature skill/my paper/New_Fig"
+  target_dir <- file.path(PROJECT_DIR, "Fig")
 
   dir.create(target_dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -818,17 +826,10 @@ library(showtext)
     paste0(tolower(TARGET_SHOCK), "_resilience_H_comparison_academic_no_shades.pdf"))
 
   # 4) Read resilience data for different H
-  r_data_6 <- read_xlsx(
-    "~/Desktop/\u91d1\u878d\u97e7\u6027/TVP-VAR\u8ba1\u7b97\u97e7\u6027/TVP-VAR/resilience_metrics_median6.xlsx"
-  )
-
-  r_data_8 <- read_xlsx(
-    "~/Desktop/\u91d1\u878d\u97e7\u6027/TVP-VAR\u8ba1\u7b97\u97e7\u6027/TVP-VAR/resilience_metrics_median.xlsx"
-  )
-
-  r_data_10 <- read_xlsx(
-    "~/Desktop/\u91d1\u878d\u97e7\u6027/TVP-VAR\u8ba1\u7b97\u97e7\u6027/TVP-VAR/resilience_metrics_median10.xlsx"
-  )
+  HORIZON_DATA_DIR <- file.path(PROJECT_DIR, "Energy Economics Data", "horizon_resilience")
+  r_data_6 <- read_xlsx(file.path(HORIZON_DATA_DIR, "resilience_metrics_median6.xlsx"))
+  r_data_8 <- read_xlsx(file.path(HORIZON_DATA_DIR, "resilience_metrics_median.xlsx"))
+  r_data_10 <- read_xlsx(file.path(HORIZON_DATA_DIR, "resilience_metrics_median10.xlsx"))
 
   H_DATA <- list("H = 6" = r_data_6, "H = 8" = r_data_8, "H = 10" = r_data_10)
 
@@ -1039,12 +1040,12 @@ library(showtext)
   STATE_TO_PLOT <- 1 # 1 or 2
 
   if (!exists("PROJECT_DIR", inherits = TRUE)) {
-    PROJECT_DIR <- path.expand("~/Desktop/nature skill/my paper")
+    PROJECT_DIR <- normalizePath(getwd(), mustWork = TRUE)
   }
   PYTHON_OUTPUT_DIR <- file.path(PROJECT_DIR, "Energy Economics Code", "python code", "output")
   input_xlsx <- file.path(PYTHON_OUTPUT_DIR, paste0(tolower(SHOCK_LABEL),
     "_ms_state_probabilities_state", STATE_TO_PLOT, ".xlsx"))
-  target_dir <- file.path(PYTHON_OUTPUT_DIR, "figures")
+  target_dir <- file.path(PROJECT_DIR, "Fig")
 
   dir.create(target_dir, recursive = TRUE, showWarnings = FALSE)
 

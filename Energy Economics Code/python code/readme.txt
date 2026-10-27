@@ -207,8 +207,9 @@ Examples of accessing the retained objects:
   state_mapping_tables["GPR"]
   exported_probability_files["GPR"]
 
-The R Markov block reads the probability workbooks from output/ and writes to
-output/figures/. Set R's SHOCK_LABEL and STATE_TO_PLOT to match the Python file.
+The R Markov block reads the probability workbooks from output/ and writes its
+PDFs to <project root>/Fig/, shared with the other R and MATLAB figures.
+Set R's SHOCK_LABEL and STATE_TO_PLOT to match the Python file.
 Set PROJECT_DIR in R when moving the package. R baseline plots and descriptive
 statistics continue to read matlab code/resilience_metrics.xlsx.
 
