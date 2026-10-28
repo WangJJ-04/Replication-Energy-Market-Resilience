@@ -37,9 +37,16 @@ Configure the font paths within each block for another computer.
 3. PROJECT ROOT AND RUNNING ORDER
 --------------------------------
 Keep Energy Economics Code and Energy Economics Data under the same parent.
-Set PROJECT_DIR to that parent; both scripts respect a value already supplied
-in the R session. If not supplied, PROJECT_DIR uses the current R working
-directory. Start R at the project root, or set PROJECT_DIR explicitly.
+Both scripts and each complete plotting block locate that parent by searching
+upward from PROJECT_DIR, if supplied, and then the current R working directory.
+The root must contain both package folders. Starting R in r code/ or another
+package subdirectory therefore works without changing the data paths. A valid
+explicit PROJECT_DIR takes priority; a supplied subdirectory is resolved to its
+root. If no root is found, the code stops with an explanatory error.
+
+After changing PROJECT_DIR or moving the package, rerun the path-setup section
+before reading data; this rebuilds RESILIENCE_FILE and the other path variables.
+All remaining paths are built relative to the resolved root.
 
 The variable-summary block can run before MATLAB estimation. The resilience
 summaries and baseline plots require matlab code/resilience_metrics.xlsx.
@@ -51,8 +58,13 @@ To run the full descriptive script, start from the parent of the two folders:
   source(file.path(PROJECT_DIR, "Energy Economics Code", "r code",
                    "ee_descriptive_statistics.r"))
 
-For baseline and horizon-comparison plots, first create the existing date object
-from the full 167-month workbook:
+If R starts in Energy Economics Code/r code/, the equivalent command is:
+
+  source("ee_descriptive_statistics.r")
+
+The script sets PROJECT_DIR to the package root. For baseline and
+horizon-comparison plots, then create the existing date object from the full
+167-month workbook:
 
   date_source <- readxl::read_xlsx(file.path(
     PROJECT_DIR, "Energy Economics Data", "VAR_100data.xlsx"))
@@ -199,5 +211,8 @@ syntax trees match the previous versions. Statistical expressions, plotting
 settings, labels, event adjustments, and their order are retained.
 The horizon workbooks were copied byte for byte from the existing analysis.
 Existing reference PDFs were relocated without changing their contents.
-Neither script was sourced; no statistical results, LaTeX tables, or PDFs were
-regenerated for this output-path update.
+For the root-location fix, only the isolated path-setup expressions were
+evaluated. Checks cover the project root, code subdirectories, supplied roots,
+and an existing PROJECT_DIR pointing to r code/. Input existence and the common
+Fig/ destination were checked. Neither full script was sourced; no statistical
+results, LaTeX tables, or PDFs were regenerated.

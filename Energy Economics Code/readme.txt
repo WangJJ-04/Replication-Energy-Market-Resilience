@@ -138,12 +138,21 @@ See python code/readme.txt for hypotheses, correction scope, and output columns.
 
 7. STEP 4: RUN THE R SUMMARIES AND FIGURES
 ----------------------------------------
-Set PROJECT_DIR to the parent directory containing the Code and Data folders.
-For example, from that parent directory in R:
+The R scripts search upward from PROJECT_DIR, if supplied, and then the current
+working directory for the parent containing both package folders. R can start
+at the project root or inside a package subdirectory, including r code/.
+A supplied subdirectory is resolved to the root; an explicit valid root takes
+priority. If no root is found, set PROJECT_DIR to the package root.
+
+For example, from the project root in R:
 
   PROJECT_DIR <- normalizePath(getwd())
   source(file.path(PROJECT_DIR, "Energy Economics Code", "r code",
                    "ee_descriptive_statistics.r"))
+
+From Energy Economics Code/r code/, use source("ee_descriptive_statistics.r")
+instead. The script initializes PROJECT_DIR and all input paths. Rerun the
+path-setup section after moving the package or changing PROJECT_DIR.
 
 The descriptive script reads the percentage-scale VAR workbook, the 167-row
 unstandardized macrofinancial file, and the generated resilience workbook.

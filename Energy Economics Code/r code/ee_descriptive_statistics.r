@@ -11,9 +11,23 @@ library(readxl)
   # A. Variable summary statistics: energy, uncertainty, and macrofinancial data
 
   # Both input files contain 167 months, from January 2010 to November 2023.
-  if (!exists("PROJECT_DIR", inherits = TRUE)) {
-    PROJECT_DIR <- normalizePath(getwd(), mustWork = TRUE)
-  }
+  # Find the package root, including when R starts in a code subdirectory.
+  PROJECT_DIR <- (function() {
+    start_dirs <- c(if (exists("PROJECT_DIR", inherits = TRUE)) PROJECT_DIR, getwd())
+    for (start_dir in unique(start_dirs)) {
+      if (!dir.exists(start_dir)) next
+      root <- normalizePath(start_dir, winslash = "/", mustWork = TRUE)
+      repeat {
+        if (all(dir.exists(file.path(root,
+          c("Energy Economics Code", "Energy Economics Data"))))) return(root)
+        parent <- dirname(root)
+        if (identical(parent, root)) break
+        root <- parent
+      }
+    }
+    stop("Project root not found. Set PROJECT_DIR to the folder containing ",
+      "Energy Economics Code and Energy Economics Data.")
+  })()
   VAR_DATA_FILE <- file.path(PROJECT_DIR, "Energy Economics Data", "VAR_100data.xlsx")
   MACRO_DATA_FILE <- file.path(PROJECT_DIR, "Energy Economics Data", "markov_100data_167.csv")
 

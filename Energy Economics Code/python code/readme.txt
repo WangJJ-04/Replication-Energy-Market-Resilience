@@ -210,8 +210,11 @@ Examples of accessing the retained objects:
 The R Markov block reads the probability workbooks from output/ and writes its
 PDFs to <project root>/Fig/, shared with the other R and MATLAB figures.
 Set R's SHOCK_LABEL and STATE_TO_PLOT to match the Python file.
-Set PROJECT_DIR in R when moving the package. R baseline plots and descriptive
-statistics continue to read matlab code/resilience_metrics.xlsx.
+The R scripts locate the root by searching upward from PROJECT_DIR, if supplied,
+and then R's current working directory. Starting R inside r code/ is supported.
+An explicit valid root takes priority. Rerun the R path setup after moving the
+package or changing PROJECT_DIR. R baseline plots and descriptive statistics
+continue to read matlab code/resilience_metrics.xlsx.
 
 8. STATIC VERIFICATION
 ----------------------

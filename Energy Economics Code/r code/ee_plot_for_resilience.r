@@ -33,9 +33,23 @@ library(showtext)
   FONT_FAMILY <- "Times New Roman"
 
   # 2. Output device
-  if (!exists("PROJECT_DIR", inherits = TRUE)) {
-    PROJECT_DIR <- normalizePath(getwd(), mustWork = TRUE)
-  }
+  # Find the package root, including when R starts in a code subdirectory.
+  PROJECT_DIR <- (function() {
+    start_dirs <- c(if (exists("PROJECT_DIR", inherits = TRUE)) PROJECT_DIR, getwd())
+    for (start_dir in unique(start_dirs)) {
+      if (!dir.exists(start_dir)) next
+      root <- normalizePath(start_dir, winslash = "/", mustWork = TRUE)
+      repeat {
+        if (all(dir.exists(file.path(root,
+          c("Energy Economics Code", "Energy Economics Data"))))) return(root)
+        parent <- dirname(root)
+        if (identical(parent, root)) break
+        root <- parent
+      }
+    }
+    stop("Project root not found. Set PROJECT_DIR to the folder containing ",
+      "Energy Economics Code and Energy Economics Data.")
+  })()
   FIG_DIR <- file.path(PROJECT_DIR, "Fig")
   dir.create(FIG_DIR, recursive = TRUE, showWarnings = FALSE)
   pdf(file.path(FIG_DIR, "r_plot_resilience_abc_vertical_re.pdf"),
@@ -361,9 +375,23 @@ library(showtext)
   # Use, for example, c("GPR") to generate only one shock figure.
   TARGET_SHOCKS <- c("GPR", "CPU", "OPU")
 
-  if (!exists("PROJECT_DIR", inherits = TRUE)) {
-    PROJECT_DIR <- normalizePath(getwd(), mustWork = TRUE)
-  }
+  # Find the package root, including when R starts in a code subdirectory.
+  PROJECT_DIR <- (function() {
+    start_dirs <- c(if (exists("PROJECT_DIR", inherits = TRUE)) PROJECT_DIR, getwd())
+    for (start_dir in unique(start_dirs)) {
+      if (!dir.exists(start_dir)) next
+      root <- normalizePath(start_dir, winslash = "/", mustWork = TRUE)
+      repeat {
+        if (all(dir.exists(file.path(root,
+          c("Energy Economics Code", "Energy Economics Data"))))) return(root)
+        parent <- dirname(root)
+        if (identical(parent, root)) break
+        root <- parent
+      }
+    }
+    stop("Project root not found. Set PROJECT_DIR to the folder containing ",
+      "Energy Economics Code and Energy Economics Data.")
+  })()
   RESILIENCE_FILE <- file.path(
     PROJECT_DIR, "Energy Economics Code", "matlab code", "resilience_metrics.xlsx")
   RESILIENCE_OUTPUT_DIR <- file.path(PROJECT_DIR, "Fig")
@@ -809,9 +837,23 @@ library(showtext)
   # 2) Basic settings
   TARGET_SHOCK <- "GPR" # Used only to name the output file
 
-  if (!exists("PROJECT_DIR", inherits = TRUE)) {
-    PROJECT_DIR <- normalizePath(getwd(), mustWork = TRUE)
-  }
+  # Find the package root, including when R starts in a code subdirectory.
+  PROJECT_DIR <- (function() {
+    start_dirs <- c(if (exists("PROJECT_DIR", inherits = TRUE)) PROJECT_DIR, getwd())
+    for (start_dir in unique(start_dirs)) {
+      if (!dir.exists(start_dir)) next
+      root <- normalizePath(start_dir, winslash = "/", mustWork = TRUE)
+      repeat {
+        if (all(dir.exists(file.path(root,
+          c("Energy Economics Code", "Energy Economics Data"))))) return(root)
+        parent <- dirname(root)
+        if (identical(parent, root)) break
+        root <- parent
+      }
+    }
+    stop("Project root not found. Set PROJECT_DIR to the folder containing ",
+      "Energy Economics Code and Energy Economics Data.")
+  })()
   x_date <- as.Date(index_GPR_m1_data$Date[2:167])
 
   year_ticks <- seq(from = as.Date(paste0(format(min(x_date), "%Y"), "-01-01")),
@@ -1039,9 +1081,23 @@ library(showtext)
   SHOCK_LABEL <- "OPU" # Choose "GPR", "CPU", or "OPU"
   STATE_TO_PLOT <- 1 # 1 or 2
 
-  if (!exists("PROJECT_DIR", inherits = TRUE)) {
-    PROJECT_DIR <- normalizePath(getwd(), mustWork = TRUE)
-  }
+  # Find the package root, including when R starts in a code subdirectory.
+  PROJECT_DIR <- (function() {
+    start_dirs <- c(if (exists("PROJECT_DIR", inherits = TRUE)) PROJECT_DIR, getwd())
+    for (start_dir in unique(start_dirs)) {
+      if (!dir.exists(start_dir)) next
+      root <- normalizePath(start_dir, winslash = "/", mustWork = TRUE)
+      repeat {
+        if (all(dir.exists(file.path(root,
+          c("Energy Economics Code", "Energy Economics Data"))))) return(root)
+        parent <- dirname(root)
+        if (identical(parent, root)) break
+        root <- parent
+      }
+    }
+    stop("Project root not found. Set PROJECT_DIR to the folder containing ",
+      "Energy Economics Code and Energy Economics Data.")
+  })()
   PYTHON_OUTPUT_DIR <- file.path(PROJECT_DIR, "Energy Economics Code", "python code", "output")
   input_xlsx <- file.path(PYTHON_OUTPUT_DIR, paste0(tolower(SHOCK_LABEL),
     "_ms_state_probabilities_state", STATE_TO_PLOT, ".xlsx"))

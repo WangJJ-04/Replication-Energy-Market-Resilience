@@ -104,8 +104,13 @@ absent. See the R README for the exact font settings.
    - Exports smoothed state probabilities and test summaries to `python code/output/`.
 
 ### Step 4: Summary Tables and Figures (R)
-Set the R working directory to `<project root>`, then initialize the project
-path and the full monthly date vector:
+The R scripts locate `<project root>` by searching upward from a supplied
+`PROJECT_DIR` and then the current working directory for both package folders.
+They work from the project root or a package subdirectory such as
+`Energy Economics Code/r code/`. A valid explicit root takes priority; a
+supplied subdirectory is resolved to its root.
+
+For the following full-workflow example, start R at `<project root>`:
 
 ```r
 PROJECT_DIR <- normalizePath(getwd())
@@ -121,6 +126,20 @@ source(file.path(
   PROJECT_DIR, "Energy Economics Code", "r code", "ee_plot_for_resilience.r"
 ))
 ```
+
+When R starts in `Energy Economics Code/r code/`, use this sequence instead:
+
+```r
+source("ee_descriptive_statistics.r")  # Resolves PROJECT_DIR automatically.
+date_source <- readxl::read_xlsx(file.path(
+  PROJECT_DIR, "Energy Economics Data", "VAR_100data.xlsx"
+))
+index_GPR_m1_data <- data.frame(Date = as.Date(date_source$date))
+source("ee_plot_for_resilience.r")
+```
+
+After moving the package or changing `PROJECT_DIR`, rerun the path-setup
+section to rebuild `RESILIENCE_FILE` and the other input/output paths.
 
 The descriptive script prints summary statistics, rank counts, and correlation
 matrices, and writes `variable_summary_statistics.tex` in `r code/`.
