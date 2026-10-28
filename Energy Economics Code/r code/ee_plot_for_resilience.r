@@ -397,7 +397,13 @@ library(showtext)
   RESILIENCE_OUTPUT_DIR <- file.path(PROJECT_DIR, "Fig")
 
   r_data <- read_xlsx(RESILIENCE_FILE)
-  x_date <- as.Date(index_GPR_m1_data$Date[2:167])
+  # Read the full TVP-VAR calendar and omit its initial, unestimated period.
+  VAR_DATA_FILE <- file.path(PROJECT_DIR, "Energy Economics Data", "VAR_100data.xlsx")
+  sample_dates <- as.Date(read_xlsx(VAR_DATA_FILE, sheet = "VAR_100data")$date)
+  if (length(sample_dates) != 167L || anyNA(sample_dates)) {
+    stop("VAR_100data.xlsx must contain 167 valid dates in its date column.")
+  }
+  x_date <- sample_dates[2:167] # February 2010-November 2023: 166 observations.
 
   # Shock-specific market mappings
   MARKET_VAR_MAPS <- list(
@@ -854,7 +860,13 @@ library(showtext)
     stop("Project root not found. Set PROJECT_DIR to the folder containing ",
       "Energy Economics Code and Energy Economics Data.")
   })()
-  x_date <- as.Date(index_GPR_m1_data$Date[2:167])
+  # Read the full TVP-VAR calendar and omit its initial, unestimated period.
+  VAR_DATA_FILE <- file.path(PROJECT_DIR, "Energy Economics Data", "VAR_100data.xlsx")
+  sample_dates <- as.Date(read_xlsx(VAR_DATA_FILE, sheet = "VAR_100data")$date)
+  if (length(sample_dates) != 167L || anyNA(sample_dates)) {
+    stop("VAR_100data.xlsx must contain 167 valid dates in its date column.")
+  }
+  x_date <- sample_dates[2:167] # February 2010-November 2023: 166 observations.
 
   year_ticks <- seq(from = as.Date(paste0(format(min(x_date), "%Y"), "-01-01")),
     to = as.Date(paste0(format(max(x_date), "%Y"), "-01-01")), by = "1 year")

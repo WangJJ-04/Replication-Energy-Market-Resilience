@@ -159,16 +159,20 @@ unstandardized macrofinancial file, and the generated resilience workbook.
 It prints summary/correlation/ranking results and saves the variable-summary
 LaTeX fragment as r code/variable_summary_statistics.tex.
 
-For plotting, initialize the full date vector and load the plotting packages:
+For plotting, load the required packages (also listed at the top of the script):
 
   library(readxl)
   library(ggplot2)
   library(grid)
   library(sysfonts)
   library(showtext)
-  date_source <- read_xlsx(file.path(PROJECT_DIR, "Energy Economics Data",
-                                    "VAR_100data.xlsx"))
-  index_GPR_m1_data <- data.frame(Date = as.Date(date_source$date))
+
+The existing date column in Energy Economics Data/VAR_100data.xlsx is read
+automatically by the baseline and horizon-comparison blocks. The full TVP-VAR
+input covers January 2010-November 2023 (167 months). The plots use observations
+2-167, February 2010-November 2023 (166 months), matching the resilience indices
+and Markov sample after the initial observation is lost to the one VAR lag.
+No external date workbook or manually created date object is required.
 
 Open r code/ee_plot_for_resilience.r and run the required complete blocks:
 

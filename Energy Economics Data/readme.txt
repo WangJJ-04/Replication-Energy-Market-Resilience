@@ -44,6 +44,12 @@ Columns, in the required order, are:
 
   date, GPR, CPU, OPU, OIL, NG, COAL, ERIX, EUA
 
+The existing date column is also the calendar for the R baseline and
+horizon-comparison figures. Both plotting blocks read it automatically from
+sheet VAR_100data. Its 167 monthly dates cover January 2010-November 2023;
+observations 2-167 provide the 166 dates for resilience and Markov analysis,
+February 2010-November 2023. No separate date workbook is needed.
+
 Uncertainty indicators:
   GPR: geopolitical risk index, in index levels.
   CPU: climate policy uncertainty index, in index levels.

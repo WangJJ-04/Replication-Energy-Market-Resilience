@@ -114,11 +114,6 @@ For the following full-workflow example, start R at `<project root>`:
 
 ```r
 PROJECT_DIR <- normalizePath(getwd())
-date_source <- readxl::read_xlsx(file.path(
-  PROJECT_DIR, "Energy Economics Data", "VAR_100data.xlsx"
-))
-index_GPR_m1_data <- data.frame(Date = as.Date(date_source$date))
-
 source(file.path(
   PROJECT_DIR, "Energy Economics Code", "r code", "ee_descriptive_statistics.r"
 ))
@@ -131,10 +126,6 @@ When R starts in `Energy Economics Code/r code/`, use this sequence instead:
 
 ```r
 source("ee_descriptive_statistics.r")  # Resolves PROJECT_DIR automatically.
-date_source <- readxl::read_xlsx(file.path(
-  PROJECT_DIR, "Energy Economics Data", "VAR_100data.xlsx"
-))
-index_GPR_m1_data <- data.frame(Date = as.Date(date_source$date))
 source("ee_plot_for_resilience.r")
 ```
 
@@ -143,6 +134,16 @@ section to rebuild `RESILIENCE_FILE` and the other input/output paths.
 
 The descriptive script prints summary statistics, rank counts, and correlation
 matrices, and writes `variable_summary_statistics.tex` in `r code/`.
+
+The `date` column is already included in `Energy Economics Data/VAR_100data.xlsx`.
+The baseline and horizon-comparison plotting blocks read it automatically:
+
+- **TVP-VAR input:** 167 months, January 2010-November 2023.
+- **Resilience and Markov sample:** 166 months, February 2010-November 2023.
+  With one VAR lag, sample indices `t = 2,...,167` map to workbook observations
+  2-167, excluding the first month.
+
+No separate date workbook or manually initialized date object is required.
 
 The plotting file contains four complete blocks:
 
@@ -154,7 +155,7 @@ The plotting file contains four complete blocks:
 
 All PDFs are saved in `<project root>/Fig/`, which is created automatically.
 Individual complete blocks can also be selected after loading the plotting
-packages and initializing the project/date objects above.
+packages. Each block initializes its paths; Blocks 2-3 also read their dates.
 
 The comparison workbooks preserve the existing analysis inputs. To regenerate
 alternative horizons, synchronize the MATLAB horizon, response-point count,

@@ -62,17 +62,18 @@ If R starts in Energy Economics Code/r code/, the equivalent command is:
 
   source("ee_descriptive_statistics.r")
 
-The script sets PROJECT_DIR to the package root. For baseline and
-horizon-comparison plots, then create the existing date object from the full
-167-month workbook:
+The script sets PROJECT_DIR to the package root. The baseline and
+horizon-comparison plotting blocks each read the date column directly from
+Energy Economics Data/VAR_100data.xlsx, sheet VAR_100data. This column already
+contains the full TVP-VAR calendar: January 2010-November 2023 (167 months).
+Each block validates that 167 nonmissing dates were read, then sets:
 
-  date_source <- readxl::read_xlsx(file.path(
-    PROJECT_DIR, "Energy Economics Data", "VAR_100data.xlsx"))
-  index_GPR_m1_data <- data.frame(Date = as.Date(date_source$date))
+  x_date <- sample_dates[2:167]
 
-The plots use index_GPR_m1_data$Date[2:167], February 2010-November 2023.
-An existing object with that date sequence can also be used. Preserve the
-chronological order and the 166 observations in every plotted market series.
+These 166 dates cover February 2010-November 2023 and match the resilience
+indices t = 2,...,167 and the Markov sample. The first month is excluded because
+the model uses one VAR lag. No separate date workbook or pre-existing date
+object is needed. Preserve the workbook's chronological order.
 
 Run the Required packages section before selecting a complete plotting block
 in RStudio. Sourcing the whole plotting file executes all four blocks and
@@ -214,5 +215,12 @@ Existing reference PDFs were relocated without changing their contents.
 For the root-location fix, only the isolated path-setup expressions were
 evaluated. Checks cover the project root, code subdirectories, supplied roots,
 and an existing PROJECT_DIR pointing to r code/. Input existence and the common
-Fig/ destination were checked. Neither full script was sourced; no statistical
-results, LaTeX tables, or PDFs were regenerated.
+Fig/ destination were checked.
+
+For the date-input update, only the isolated date-reading expressions were
+evaluated. The workbook's 167 dates match the corresponding original source
+dates, and observations 2-167 match the 166-row Markov conditioning file.
+Outside the date-reading setup, all statistical and plotting expressions are
+unchanged. No numerical input or analysis workbook was
+modified. Neither full script was sourced; no statistical results, LaTeX tables,
+or PDFs were regenerated.
